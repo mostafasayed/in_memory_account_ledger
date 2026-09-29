@@ -110,7 +110,7 @@ The obvious model is `auth.status = "SETTLED"`.
 - *Why abandoned:* no exchange rate is given, and choosing one would be an invented constant with no defence. The ledger flags `NO_FEE_SCHEDULE` instead (AMBIGUITIES B5).
 
 **6. Refund fees automatically when a back-dated entry clears the negative day (built on a scratch branch, not adopted).**
-This is the fix path named in the failing test. It is built on branch `scratch/fee-refund` (commit `e1ce200`).
+This is the fix path named in the failing test. It is built on branch `scratch/fee-refund` (the "Experiment: refund fees…" commit).
 - *The rule:* at each end-of-day, before charging new fees, walk the days in order. For any fee not yet refunded whose day would close at zero or above without it, append a `REVERSAL` entry pointing at the fee (`ref = fee.id`), with the fee's own value date. The fee itself is never deleted.
 - *Measured results:*
 
