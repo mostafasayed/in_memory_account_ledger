@@ -109,7 +109,22 @@ The obvious model is `auth.status = "SETTLED"`.
 **5. Convert the AED fee to BHD for ACC-002 (abandoned during analysis).**
 - *Why abandoned:* no exchange rate is given, and choosing one would be an invented constant with no defence. The ledger flags `NO_FEE_SCHEDULE` instead (AMBIGUITIES B5).
 
-**6. Refund fees automatically when a back-dated reversal clears the negative day (considered, not built).**
-This is the fix for the failing test.
-- *Why not built:* the brief gives no refund rule. Building one would be a behaviour change beyond the spec, and it still couldn't undo the Auth-B decline.
-- It is written up as the upgrade path inside `test/known-failure.test.ts`.
+**6. Refund fees automatically when a back-dated entry clears the negative day (built on a scratch branch, not adopted).**
+This is the fix path named in the failing test. It is built on branch `scratch/fee-refund` (commit `e1ce200`).
+- *The rule:* at each end-of-day, before charging new fees, walk the days in order. For any fee not yet refunded whose day would close at zero or above without it, append a `REVERSAL` entry pointing at the fee (`ref = fee.id`), with the fee's own value date. The fee itself is never deleted.
+- *Measured results:*
+
+  | | Adopted design | With refunds |
+  |---|---|---|
+  | ACC-001 restated Days 2 / 4 / 5 | 225.00 / 235.00 / 210.00 | 250.00 / 285.00 / 285.00 |
+  | Interest capitalized | 0.69 | 0.79 |
+  | Final ACC-001 balance | 210.69 | 285.79 |
+  | Fee lines in the ledger | 3 | still 3, plus 3 refunds |
+  | Auth-B | DECLINED | still DECLINED |
+
+- *Effect on the tests:* 3 tests in `test/ledger.test.ts` turn red by design: the per-day closing (210.69 becomes 285.79), criterion #6 (the balance now matches the E7-never-happened world) and criterion #8 (0.69 becomes 0.79). `test/known-failure.test.ts` still fails, but only on the gross fee count (3 vs 0) and on Auth-B.
+- *Why not adopted:*
+  1. The brief defines when a fee is assessed, but gives no refund rule. Adding one is inventing policy, the same reason I refused to invent an FX rate for the BHD fee.
+  2. It raises questions the brief can't answer. Can a refunded day be charged again if it goes negative later? (`#hasFee` says no.) Should a late *customer* credit also trigger refunds, or only a bank correction? The rule as written can't tell the two apart.
+  3. It still can't undo the Auth-B decline. So criterion 6 stays rejected, and the failing test still fails.
+- *The case for adopting it, which I'd accept from the business:* the customer shouldn't pay AED 75 for the bank's own late, reversed posting. And the fee is defined by "that day's closing balance", which after restatement is no longer negative.
