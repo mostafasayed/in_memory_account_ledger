@@ -78,6 +78,18 @@ E7 arrives on Day 5, but makes Day 2 negative.
 - **Chosen:** fees first, then interest. If interest ran first it could, in theory, lift a −0.01 balance above zero and avoid a fee.
 - Day 6 closes at +210.00 before interest, so the order doesn't matter here.
 
+### B7. If fees were refunded, could a refunded day be charged again?
+This question only exists if the fee-refund rule from B4 option 2 is adopted. It came out of building that rule on branch `scratch/fee-refund` (REJECTED, abandoned approach 6).
+
+Scenario: Day 2's fee is refunded after a back-dated credit lifts Day 2 above zero. Later, another back-dated debit makes Day 2 negative again.
+- **Option 1: no re-charge.** "Assessed once per day per account" is read literally: Day 2's fee was assessed once, and refunding it doesn't reset the count.
+- **Option 2: re-charge.** The refund cancelled the assessment, so the new negative is a fresh one.
+- **Chosen: option 1**, if the refund rule is ever adopted:
+  1. It matches the literal rule. Option 2 means two assessments for the same day.
+  2. It can't oscillate. Under option 2, a stream of back-dated corrections could charge, refund and re-charge the same day indefinitely, which the customer and operations would both find incoherent.
+  3. The error is in the customer's favour: at worst the bank forgoes one fee.
+- **Code:** `#hasFee` already behaves this way, because it counts a fee entry whether or not it was refunded.
+
 ---
 
 ## C. Interest
