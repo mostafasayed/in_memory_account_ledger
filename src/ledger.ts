@@ -273,6 +273,29 @@ export class Ledger {
 	endOfDay(day: number): Entry[] {
 		const fees: Entry[] = [];
 		for (const [account, currency] of this.#accounts) {
+			// Refund a fee whose day is no longer negative without it (e.g. after a back-dated
+			// reversal). Appends a REVERSAL pointing at the fee; the fee itself is never deleted.
+			for (let d = 1; d <= day; d++) {
+				const fee = this.#entries.find(
+					(e) =>
+						e.kind === "FEE" &&
+						e.account === account &&
+						e.valueDate === d &&
+						!this.#entries.some((r) => r.ref === e.id),
+				);
+				if (!fee) continue;
+				if (this.balance(account, d) - fee.amount < 0) continue;
+				this.#post(
+					account,
+					"REVERSAL",
+					-fee.amount,
+					d,
+					day,
+					`EOD-D${day}`,
+					fee.id,
+				);
+			}
+
 			for (let d = 1; d <= day; d++) {
 				if (this.balance(account, d) >= 0 || this.#hasFee(account, d)) continue;
 				if (currency !== OVERDRAFT_FEE.currency) {
