@@ -38,9 +38,13 @@ Times without `~` come from `date` or git at the moment of writing. Entries mark
 - **11:18** [AI] Wrote the README and checked every number in it against `bun run replay` and `bun test`.
 - **~11:25** [Me+AI] Reviewed the finished work with the AI before submission. Identified three things to check: WORKLOG attribution, defense prep (the Day 5 walkthrough and the criterion 4 argument), and an optional fee-refund exercise.
 - **12:12** [Me] Asked the AI to fix the attribution in this file. Earlier entries were written in first person, which credited me with work the AI did (the hand-replay and both self-corrections). Rewrote them with [Me]/[AI] tags.
+- **12:21** [Me] Switched to `scratch/fee-refund` to try the fee-refund rule myself. Wrote the refund check in `Ledger.endOfDay`; my first attempt placed it outside the account/day loops and failed typecheck (10 errors), so I learned `account`/`d` only exist inside those loops.
+- **~12:40** [Me] Weighed adopting vs. discarding the refund rule. Decided not to adopt: the brief defines fee assessment but not refunds, and the rule can't undo the Auth-B decline. Kept the experiment on the scratch branch for reference.
+- **~13:55** [Me] Chose to rewrite the history before the first push to remove earlier WORKLOG drafts, with the rewrite disclosed in this file and the README.
 - **13:58** [Me+AI] At my request, the AI rewrote the commit history before the first push to remove the earlier drafts of this file, and added the history note at the top and in the README. Verified that the only difference between the old and new branch tips is this file.
 - **14:00** [AI] At my request, closed three gaps in the design, each as its own commit:
   - **Over-settlement:** settlements above their hold are now flagged `SETTLEMENT_EXCEEDS_HOLD`, with no tolerance (NUMBERS #15).
   - **Fee spiral:** added a test showing a fee alone can trigger the next day's fee (AMBIGUITIES B3).
   - **Refunded fee days:** documented whether a refunded fee day could be charged again (AMBIGUITIES B7).
   - The main scenario's output is unchanged.
+- **~14:00** [Me] Reviewed the code again while the AI worked on the three design gaps.
