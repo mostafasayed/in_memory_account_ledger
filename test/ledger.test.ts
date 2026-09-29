@@ -165,6 +165,19 @@ describe("ledger invariants", () => {
 		expect(ledger.authorize("A2", "H2", "X", aed("0.01"), 1)).toBe("DECLINED");
 	});
 
+	// AMBIGUITIES B3: the rule allows a fee alone to trigger the next day's fee.
+	test("fee spiral: a fee can make the next day negative on its own", () => {
+		const ledger = new Ledger({ X: "AED" });
+		ledger.debit("D1", "X", aed("1.00"), 1, 1);
+		ledger.endOfDay(1); // Day 1: -1.00 -> fee -> -26.00
+		ledger.credit("C2", "X", aed("20.00"), 2, 2);
+		ledger.endOfDay(2); // Day 2: -26.00 + 20.00 = -6.00 -> fee -> -31.00
+		expect(feeDays(ledger, "X")).toEqual([1, 2]);
+		expect(ledger.balance("X", 2)).toBe(aed("-31.00"));
+		// Without Day 1's fee, Day 2 would have closed at +19.00 and never been charged.
+		expect(ledger.balance("X", 2) + 2 * 2500).toBe(aed("19.00"));
+	});
+
 	test("a settlement above its hold is posted but flagged", () => {
 		const ledger = new Ledger({ X: "AED" });
 		ledger.credit("C", "X", aed("100.00"), 1, 1);

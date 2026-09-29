@@ -60,6 +60,7 @@ E7 arrives on Day 5, but makes Day 2 negative.
 ### B3. Does a fee count toward the next day's balance?
 - **Chosen:** yes. A fee is an ordinary entry, and days are checked in order.
 - **Risk (not triggered here):** a fee can make the next day negative on its own and trigger another fee, a "fee spiral". The brief's rule allows this. Day 3 restates to +5.00, so it stops here.
+- **Test:** "fee spiral" shows it: Day 1 −1.00 is charged a fee (−26.00). A +20.00 credit on Day 2 leaves −6.00, so Day 2 is charged too, even though without Day 1's fee it would have closed at +19.00.
 
 ### B4. What happens to fees after E9 reverses E7?
 - **Option 1:** keep them.
