@@ -48,3 +48,4 @@ Times without `~` come from `date` or git at the moment of writing. Entries mark
   - **Refunded fee days:** documented whether a refunded fee day could be charged again (AMBIGUITIES B7).
   - The main scenario's output is unchanged.
 - **~14:00** [Me] Reviewed the code again while the AI worked on the three design gaps.
+- **14:16** [AI] At my request, cut the Part 2 document from 2,471 words to about 1,600 to meet the 2–4 page limit, and rendered it to `Architecture-and-Trade-offs.pdf` (3 pages, A4). The markdown went through make-pdf to HTML, then a compact print stylesheet, then headless Chrome. Dropped the `bigint` row as not a real risk.

@@ -79,6 +79,7 @@ Decisions are made on what is known at the time and never re-decided: authorizat
 | `NUMBERS.md` | Every constant, and why that value and not half of it |
 | `AMBIGUITIES.md` | Every ambiguity found, and how it was resolved |
 | `REJECTED.md` | Refused acceptance criteria with reasons, plus approaches abandoned mid-build |
+| `Architecture-and-Trade-offs.pdf` | Part 2 deliverable (3 pages): scaling, value dating in a UAE bank, the authorization lifecycle, and what was cut. Source: `ARCHITECTURE.md` |
 | `WORKLOG.md` | Timestamped log of the work |
 
 **History note:** before the first push, the commit history was rewritten to remove earlier drafts of `WORKLOG.md`. No code, test or other document content was altered. Details are at the top of `WORKLOG.md`.
