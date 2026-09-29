@@ -39,3 +39,8 @@ Times without `~` come from `date` or git at the moment of writing. Entries mark
 - **~11:25** [Me+AI] Reviewed the finished work with the AI before submission. Identified three things to check: WORKLOG attribution, defense prep (the Day 5 walkthrough and the criterion 4 argument), and an optional fee-refund exercise.
 - **12:12** [Me] Asked the AI to fix the attribution in this file. Earlier entries were written in first person, which credited me with work the AI did (the hand-replay and both self-corrections). Rewrote them with [Me]/[AI] tags.
 - **13:58** [Me+AI] At my request, the AI rewrote the commit history before the first push to remove the earlier drafts of this file, and added the history note at the top and in the README. Verified that the only difference between the old and new branch tips is this file.
+- **14:00** [AI] At my request, closed three gaps in the design, each as its own commit:
+  - **Over-settlement:** settlements above their hold are now flagged `SETTLEMENT_EXCEEDS_HOLD`, with no tolerance (NUMBERS #15).
+  - **Fee spiral:** added a test showing a fee alone can trigger the next day's fee (AMBIGUITIES B3).
+  - **Refunded fee days:** documented whether a refunded fee day could be charged again (AMBIGUITIES B7).
+  - The main scenario's output is unchanged.

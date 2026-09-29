@@ -9,7 +9,7 @@ Requires [Bun](https://bun.sh) 1.3 or later.
 ```bash
 bun install
 bun run replay        # replay E1–E10 and print the per-day report
-bun test              # full suite: 19 pass, 1 fail (the intentional one, see below)
+bun test              # full suite: 21 pass, 1 fail (the intentional one, see below)
 bun run test:green    # only the passing suite
 bun run typecheck     # tsc --noEmit
 bun run lint          # biome check
