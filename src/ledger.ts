@@ -184,6 +184,8 @@ export class Ledger {
 
 	// A settlement is money that has already cleared through the card scheme, so it is
 	// always posted. Without a matching active hold it is a force-post, flagged for review.
+	// Settling for more than the hold (tips, FX) is also posted and flagged: no tolerance,
+	// since any percentage would be an invented constant.
 	settle(
 		source: string,
 		authId: string,
@@ -212,6 +214,14 @@ export class Ledger {
 					settledAmount: amount,
 				}),
 			);
+			if (amount > auth.holdAmount) {
+				this.recordError(
+					day,
+					source,
+					"SETTLEMENT_EXCEEDS_HOLD",
+					`${authId} settled for ${amount} minor units against a hold of ${auth.holdAmount}; posted, needs review`,
+				);
+			}
 		} else {
 			this.recordError(
 				day,

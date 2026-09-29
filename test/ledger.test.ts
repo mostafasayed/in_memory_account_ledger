@@ -165,6 +165,20 @@ describe("ledger invariants", () => {
 		expect(ledger.authorize("A2", "H2", "X", aed("0.01"), 1)).toBe("DECLINED");
 	});
 
+	test("a settlement above its hold is posted but flagged", () => {
+		const ledger = new Ledger({ X: "AED" });
+		ledger.credit("C", "X", aed("100.00"), 1, 1);
+		ledger.authorize("A1", "H1", "X", aed("50.00"), 1);
+		ledger.authorize("A2", "H2", "X", aed("20.00"), 1);
+		ledger.settle("S1", "H1", "X", aed("50.00"), 1, 1); // exactly the hold: fine
+		ledger.settle("S2", "H2", "X", aed("25.00"), 1, 1); // 5.00 over: flagged
+		expect(ledger.errors.map((e) => [e.code, e.source])).toEqual([
+			["SETTLEMENT_EXCEEDS_HOLD", "S2"],
+		]);
+		expect(ledger.balance("X", 1)).toBe(aed("25.00")); // both still posted
+		expect(ledger.authState("H2")?.status).toBe("SETTLED");
+	});
+
 	test("a reversal can't be applied twice or to an unknown event", () => {
 		const ledger = new Ledger({ X: "AED" });
 		ledger.debit("D1", "X", aed("10.00"), 1, 1);

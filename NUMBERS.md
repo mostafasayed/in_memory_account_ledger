@@ -20,6 +20,7 @@ All money is stored as **integer minor units** (fils). AED 12.23 is `1223`; BHD 
 | 12 | Fee currencies | AED only | `OVERDRAFT_FEE.currency` | **Chosen** |
 | 13 | Hold expiry | none inside the window | `activeHolds` | **Chosen** |
 | 14 | Largest safe amount | `Number.MAX_SAFE_INTEGER` minor units | `assertPositive`, `parseAmount` | **Chosen** |
+| 15 | Over-settlement tolerance | `0` (any amount above the hold is flagged) | `Ledger.settle` | **Chosen** |
 
 ## Why each value, and not half of it
 
@@ -54,3 +55,8 @@ Two consequences worth knowing:
 **13. Hold expiry: none (chosen).** Real card holds expire after about 7–30 days. The window is 6 days and the brief says Auth-B "is never settled inside the window", implying it simply stays open. So an approved hold stays active until it is settled. Since Auth-B is declined, this doesn't affect the result.
 
 **14. Largest amount: `Number.MAX_SAFE_INTEGER` (≈ 9 × 10^15 minor units).** That is about AED 90 trillion. Every amount is checked with `Number.isSafeInteger`, and `divideHalfEven` refuses unsafe inputs. The interest step multiplies by 4, so the practical ceiling for interest is a quarter of that. `bigint` would remove the ceiling but makes every call site noisier, which isn't worth it at this scale.
+
+**15. Over-settlement tolerance: 0 (chosen).** A settlement above its hold is posted (the money has moved) and flagged `SETTLEMENT_EXCEEDS_HOLD`. Real issuers often allow a margin, for example about 20% for restaurant tips, but the brief gives no number.
+- Any percentage would be an invented constant.
+- Half of an invented number is just as defensible as the number itself, which is exactly the problem.
+- At 0, the rule is simple: every overage gets a human look. The cost is some false alarms, and the flag blocks nothing.

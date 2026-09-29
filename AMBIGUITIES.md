@@ -118,7 +118,7 @@ E3 and E8 carry value dates, but a hold is not a ledger entry.
 ### D4. Settlement for a different amount than the hold
 Auth-A holds 200.00 and settles 185.00.
 - **Chosen:** post 185.00 and release the whole 200.00 hold. The unused 15.00 is not kept.
-- **Not handled:** a settlement *above* the hold (tips, currency conversion) is posted without any flag. That is a gap I would close with a tolerance rule.
+- **Settlement above the hold** (tips, currency conversion): posted, because the money has moved, and flagged `SETTLEMENT_EXCEEDS_HOLD` for review. There is no tolerance: any overage is flagged. A percentage such as 20% for tips would be an invented constant (see NUMBERS #15).
 
 ### D5. Settlement with no authorization (Auth-Z)
 - **Chosen:** post it (a force-post) and record `SETTLEMENT_WITHOUT_AUTH` for chargeback review. See REJECTED criterion 4.
@@ -158,7 +158,7 @@ Three equal parts of 10.000 are impossible at 3 decimals.
 ## F. Output
 
 ### F1. What counts as an "error" in the printout?
-- **Chosen:** operational exceptions that need a human: `SETTLEMENT_WITHOUT_AUTH`, `LATE_ARRIVAL`, `NO_FEE_SCHEDULE`, `DUPLICATE_AUTH`, `REVERSAL_TARGET_NOT_FOUND`, `ALREADY_REVERSED`.
+- **Chosen:** operational exceptions that need a human: `SETTLEMENT_WITHOUT_AUTH`, `SETTLEMENT_EXCEEDS_HOLD`, `LATE_ARRIVAL`, `NO_FEE_SCHEDULE`, `DUPLICATE_AUTH`, `REVERSAL_TARGET_NOT_FOUND`, `ALREADY_REVERSED`.
 - A declined authorization is a normal outcome, shown under authorization states, not as an error.
 
 ### F2. Malformed input
