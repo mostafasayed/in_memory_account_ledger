@@ -1,0 +1,16 @@
+{
+  "name": "in-memory-account-ledger",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "replay": "bun run src/replay.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.0",
+    "@types/bun": "latest",
+    "typescript": "^5.9.0"
+  }
+}
